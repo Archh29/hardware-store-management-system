@@ -12,8 +12,21 @@ export default function Dashboard() {
   const { products, sales } = useStore();
   const { user } = useAuth();
 
-  const lowStockItems = products.filter(p => p.quantity <= p.reorderLevel);
-  const totalInventoryValue = products.reduce((sum, p) => sum + (p.quantity * p.costPrice), 0);
+  const lowStockItems = products.filter(p => {
+    if (p.pricingType === 'weight-based') {
+      return (p.totalWeightKg || 0) <= (p.minWeightKg || 0);
+    } else {
+      return (p.quantity || 0) <= (p.reorderLevel || 0);
+    }
+  });
+  
+  const totalInventoryValue = products.reduce((sum, p) => {
+    if (p.pricingType === 'weight-based') {
+      return sum + ((p.totalWeightKg || 0) * p.costPrice);
+    } else {
+      return sum + ((p.quantity || 0) * p.costPrice);
+    }
+  }, 0);
   
   const todaySales = sales.filter(s => {
     const saleDate = new Date(s.date);
@@ -155,7 +168,13 @@ export default function Dashboard() {
                 <div>
                   <p className="text-sm text-purple-600 font-medium">Items in Stock</p>
                   <p className="text-2xl font-bold text-purple-900 mt-1">
-                    {products.reduce((sum, p) => sum + p.quantity, 0)}
+                    {products.reduce((sum, p) => {
+                      if (p.pricingType === 'weight-based') {
+                        return sum + (p.totalWeightKg || 0);
+                      } else {
+                        return sum + (p.quantity || 0);
+                      }
+                    }, 0).toFixed(1)}
                   </p>
                 </div>
                 <Package className="w-8 h-8 text-purple-500" />

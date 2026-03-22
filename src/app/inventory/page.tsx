@@ -332,8 +332,13 @@ export default function InventoryPage() {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filteredProducts.map((product) => {
-                  const isLowStock = product.quantity <= product.reorderLevel;
-                  const stockPercentage = (product.quantity / (product.reorderLevel * 3)) * 100;
+                  const isLowStock = product.pricingType === 'weight-based' 
+                    ? (product.totalWeightKg || 0) <= (product.minWeightKg || 0)
+                    : (product.quantity || 0) <= (product.reorderLevel || 0);
+                  
+                  const stockPercentage = product.pricingType === 'weight-based'
+                    ? ((product.totalWeightKg || 0) / ((product.minWeightKg || 1) * 3)) * 100
+                    : ((product.quantity || 0) / ((product.reorderLevel || 1) * 3)) * 100;
 
                   return (
                     <tr key={product.id} className="hover:bg-gray-50">
