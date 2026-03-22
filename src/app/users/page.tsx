@@ -98,7 +98,7 @@ export default function UsersPage() {
       {!canManageUsers && (
         <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
           <p className="text-sm text-yellow-800">
-            You don't have permission to manage users. Only administrators can add, edit, or delete user accounts.
+            You don&apos;t have permission to manage users. Only administrators can add, edit, or delete user accounts.
           </p>
         </div>
       )}

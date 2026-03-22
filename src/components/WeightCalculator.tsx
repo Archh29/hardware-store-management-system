@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { Input } from './ui/Input';
 import { Button } from './ui/Button';
-import { Badge } from './ui/Badge';
 import { Calculator } from 'lucide-react';
 
 interface WeightCalculatorProps {
